@@ -1,15 +1,17 @@
 # DevLog — Réservation de salles universitaires (fil rouge)
 
 ## Ce que j'ai compris de Git et GitHub
-Git suit localement l'historique (commits, branches, tags) ; GitHub
-héberge ce dépôt à distance pour le partager avec le formateur.
+Git suit localement l'historique du projet (commits, branches, tags),
+même sans connexion Internet. GitHub héberge ce dépôt à distance
+(https://github.com/diopcoumbathiep-bot/reservation-salles) et permet
+de le partager avec le formateur via `git push`.
 
 ## Branches créées et leur rôle
-- `main` : versions stables uniquement, aucun développement direct.
-- `develop` : intégration des trois incréments.
-- `feature/00-tooling` : Git + Maven + README.
-- `feature/01-domain` : AbstractEntity, Salle, Reservation, enums.
-- `feature/02-memory-basics` : données en mémoire.
+- `main` : versions stables uniquement, aucun développement direct dessus.
+- `develop` : branche d'intégration des trois incréments.
+- `feature/00-tooling` : mise en place Git + Maven + README (fusionnée puis supprimée).
+- `feature/01-domain` : AbstractEntity, Salle, Reservation, enums (fusionnée puis supprimée).
+- `feature/02-memory-basics` : données de démonstration en mémoire (fusionnée puis supprimée).
 
 ## Tags posés
 - `v0.1.0` — outillage Git et Maven initialisé.
@@ -17,125 +19,77 @@ héberge ce dépôt à distance pour le partager avec le formateur.
 - `v0.3.0` — premières données en mémoire disponibles.
 
 ## Ce que Maven apporte au projet
-Structure standard, `mvn compile`/`mvn test`/`mvn package`, gestion de
-la version Java cible dans `pom.xml`, sans classpath manuel.
+Structure standard du projet, compilation (`mvn compile`), packaging,
+et gestion de la version Java cible (21) directement dans `pom.xml`,
+sans avoir à construire le classpath à la main.
 
 ## Diagramme de classes
-Voir `docs/diagramme.md`.
+Voir `docs/diagramme.md` — conçu par moi-même, encore en attente de
+validation par le formateur au moment de la rédaction de ce DevLog.
 
 ## Pourquoi AbstractEntity est abstraite
-Elle ne porte que l'identifiant, un socle technique commun à Salle et
-Reservation, sans exister en tant que concept métier autonome.
+Elle ne représente aucun concept métier autonome à elle seule (une
+« entité » sans plus de précision n'a pas de sens) ; elle sert
+uniquement de socle pour factoriser l'identifiant, commun à Salle et
+Reservation.
 
 ## Pourquoi Salle et Reservation sont final
-Le domaine ne demande aucun sous-type de ces entités ; `final` évite un
-héritage accidentel sans justification métier.
+Le domaine ne demande aucun sous-type de ces classes ; les déclarer
+`final` empêche un héritage accidentel qui n'aurait pas de justification
+métier.
 
 ## Relation Salle / Reservation et cardinalité
 `Salle 1 -------- 0..* Reservation` : une salle peut recevoir plusieurs
-réservations ; une réservation concerne une seule salle. `Reservation`
-porte une référence directe vers `Salle`.
+réservations, une réservation concerne une seule salle. L'association
+est bidirectionnelle : `Reservation` porte une référence vers `Salle`,
+et `Salle` maintient la liste de ses réservations.
 
-## Difficulté rencontrée
-(à compléter selon votre propre expérience : par exemple la détection
-des chevauchements de créneaux horaires sur une même salle.)
+## Difficulté rencontrée et sa résolution
+En créant les branches `main` et `develop` avant tout premier commit
+(exactement comme indiqué dans le support de cours), `git switch develop`
+échouait avec `fatal: invalid reference: develop`. La raison : en Git,
+une branche ne devient une référence réelle qu'à partir de son premier
+commit — comme `develop` et `main` n'avaient jamais reçu de commit
+directement, elles n'existaient plus une fois qu'on les avait quittées.
+J'ai résolu ça en créant `develop` et `main` une fois les premiers
+commits faits sur `feature/00-tooling` (`git branch develop` /
+`git branch main`), ce qui a fait que la toute première fusion
+(Incrément 1) s'est faite en fast-forward plutôt qu'avec un commit de
+fusion visible — les fusions suivantes (Incréments 2 et 3), elles,
+ont bien produit un commit de merge explicite puisque `develop` avait
+entre-temps son propre historique.
+
+Deuxième petite difficulté : lors de l'Incrément 2, j'ai regroupé par
+erreur `Application.java` avec `Salle.java`/`Reservation.java` dans le
+commit `feat: modeliser Salle et Reservation`, alors qu'il aurait dû
+apparaître seulement à l'Incrément 3. Plutôt que de réécrire l'historique
+déjà fusionné et taggé (`v0.2.0`), j'ai ajouté du contenu réellement
+nouveau à l'Incrément 3 (une troisième réservation, annulée) pour que
+le commit `feat: ajouter les salles de demonstration` corresponde à un
+vrai changement de code, cohérent avec son message.
 
 ---
 
-## Stratégie Git appliquée (incréments 1, 2, 3 — section 18 du cours)
+## Stratégie Git réellement appliquée (historique complet)
 
-### Incrément 1 — Initialiser l'environnement de travail
+Voir le dépôt public :
+https://github.com/diopcoumbathiep-bot/reservation-salles
 
-```bash
-mkdir reservation-salles
-cd reservation-salles
-git init
-git branch -M main
-git switch -c develop
-git switch -c feature/00-tooling
-
-# après création du .gitignore
-git add .gitignore
-git commit -m "chore: initialiser le depot Git"
-
-# après création/configuration du projet Maven
-git add pom.xml src/
-git commit -m "chore: initialiser le projet Maven"
-
-# après création du README
-git add README.md
-git commit -m "docs: ajouter le README initial"
-
-mvn clean compile
-git status
-
-git switch develop
-git merge --no-ff feature/00-tooling
-git branch -d feature/00-tooling
-git tag -a v0.1.0 -m "Outillage Git et Maven initialise"
 ```
-
-### Incrément 2 — Modéliser le domaine
-
-```bash
-git switch develop
-git switch -c feature/01-domain
-
-git add src/main/java
-git commit -m "feat: ajouter AbstractEntity"
-
-git add src/main/java
-git commit -m "feat: modeliser Salle et Reservation"
-
-git add src/main/java
-git commit -m "feat: ajouter les enums du domaine"
-
-git add README.md docs/
-git commit -m "docs: documenter les relations du domaine"
-
-mvn clean compile
-git switch develop
-git merge --no-ff feature/01-domain
-git branch -d feature/01-domain
-git tag -a v0.2.0 -m "Modele objet du domaine termine"
-```
-
-### Incrément 3 — Ajouter les premières données en mémoire
-
-```bash
-git switch develop
-git switch -c feature/02-memory-basics
-
-git add src/main/java
-git commit -m "feat: ajouter les salles de demonstration"
-
-# si le code d'initialisation est réorganisé sans changer le besoin
-git add src/main/java
-git commit -m "refactor: organiser l initialisation des donnees"
-
-git add README.md docs/
-git commit -m "docs: documenter le modele objet"
-
-mvn clean compile
-git switch develop
-git merge --no-ff feature/02-memory-basics
-git branch -d feature/02-memory-basics
-git tag -a v0.3.0 -m "Premieres donnees en memoire disponibles"
-```
-
-### Publication sur GitHub
-
-```bash
-git remote add origin <URL_GITHUB>
-git push -u origin main
-git push -u origin develop
-git push origin --tags
-```
-
-### Contrôle final de l'historique
-
-```bash
-git status
-git log --oneline --graph --decorate --all
-git tag
+* Merge branch 'feature/02-memory-basics' into develop   (tag: v0.3.0)
+|\
+| * refactor: organiser l initialisation des donnees
+| * docs: documenter le modele objet
+| * feat: ajouter les salles de demonstration
+|/
+*   Merge branch 'feature/01-domain' into develop        (tag: v0.2.0)
+|\
+| * docs: documenter les relations du domaine
+| * feat: ajouter les enums du domaine
+| * feat: modeliser Salle et Reservation
+| * feat: ajouter AbstractEntity
+|/
+* docs: ajouter le README initial                        (tag: v0.1.0, main)
+* chore: initialiser le projet Maven
+* chore: initialiser le depot Git
 ```
