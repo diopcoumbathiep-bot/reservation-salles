@@ -34,7 +34,10 @@ public class Application {
                 LocalDate.of(2026, 9, 15), LocalTime.of(8, 0), LocalTime.of(10, 0)));
         reservations.add(new Reservation(2L, salles.get(3), "Ibrahima Fall",
                 LocalDate.of(2026, 9, 16), LocalTime.of(14, 0), LocalTime.of(16, 0)));
+        reservations.add(new Reservation(3L, salles.get(1), "Moussa Ndiaye",
+                LocalDate.of(2026, 9, 17), LocalTime.of(9, 0), LocalTime.of(11, 0)));
         reservations.get(0).confirmer();
+        reservations.get(2).annuler();
 
         System.out.println("\n=== Réservations ===");
         for (Reservation reservation : reservations) {
