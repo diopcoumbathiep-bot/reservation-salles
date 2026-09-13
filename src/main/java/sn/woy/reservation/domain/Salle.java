@@ -4,12 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Une salle de l'université.
- * Déclarée final : le domaine ne demande aucun sous-type de Salle.
- * Association bidirectionnelle avec Reservation : une salle connaît
- * la liste de ses réservations (Salle 1 -------- 0..* Reservation).
- */
 public final class Salle extends AbstractEntity {
 
     private String nom;
@@ -29,9 +23,7 @@ public final class Salle extends AbstractEntity {
         changerCapacite(capacite);
     }
 
-    /**
-     * Cœur de l'encapsulation : impossible de fixer une capacité invalide.
-     */
+    
     public void changerCapacite(int nouvelleCapacite) {
         if (nouvelleCapacite <= 0) {
             throw new IllegalArgumentException("Capacité invalide pour la salle " + nom);
@@ -43,7 +35,6 @@ public final class Salle extends AbstractEntity {
         return active && nombrePersonnes <= capacite;
     }
 
-    /** Ajoute une réservation et maintient la cohérence des deux côtés de l'association. */
     public void addReservations(Reservation reservation) {
         if (!reservations.contains(reservation)) {
             reservations.add(reservation);
@@ -65,7 +56,6 @@ public final class Salle extends AbstractEntity {
         return reservations.size();
     }
 
-    // --- Accesseurs ---
 
     public String getNom() {
         return nom;

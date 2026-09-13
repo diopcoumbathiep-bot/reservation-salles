@@ -9,10 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Classe de démonstration (Incrément 3) : crée des salles et des
- * réservations en mémoire. Aucun Stream, aucune base de données.
- */
+
 public class Application {
 
     public static void main(String[] args) {
@@ -36,7 +33,6 @@ public class Application {
         System.out.println(amphi.getNom() + " a " + amphi.getNbReservations() + " reservation(s).");
     }
 
-    /** Crée les salles de démonstration en mémoire. */
     private static List<Salle> creerSalles() {
         List<Salle> salles = new ArrayList<>();
         salles.add(new Salle(1L, "A101", "Bâtiment A", 40, TypeSalle.SALLE_COURS));
@@ -47,7 +43,6 @@ public class Application {
         return salles;
     }
 
-    /** Crée les réservations de démonstration, rattachées aux salles fournies. */
     private static List<Reservation> creerReservations(List<Salle> salles) {
         List<Reservation> reservations = new ArrayList<>();
         reservations.add(new Reservation(1L, salles.get(0), "Awa Diop",
