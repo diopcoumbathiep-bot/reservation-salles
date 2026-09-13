@@ -17,27 +17,14 @@ public class Application {
 
     public static void main(String[] args) {
 
-        List<Salle> salles = new ArrayList<>();
-        salles.add(new Salle(1L, "A101", "Bâtiment A", 40, TypeSalle.SALLE_COURS));
-        salles.add(new Salle(2L, "A102", "Bâtiment A", 25, TypeSalle.SALLE_TP));
-        salles.add(new Salle(3L, "B201", "Bâtiment B", 15, TypeSalle.SALLE_REUNION));
-        salles.add(new Salle(4L, "Amphi 1", "Bâtiment C", 200, TypeSalle.AMPHITHEATRE));
-        salles.add(new Salle(5L, "B205", "Bâtiment B", 10, TypeSalle.SALLE_SOUTENANCE));
+        List<Salle> salles = creerSalles();
 
         System.out.println("=== Salles ===");
         for (Salle salle : salles) {
             System.out.println(salle);
         }
 
-        List<Reservation> reservations = new ArrayList<>();
-        reservations.add(new Reservation(1L, salles.get(0), "Awa Diop",
-                LocalDate.of(2026, 9, 15), LocalTime.of(8, 0), LocalTime.of(10, 0)));
-        reservations.add(new Reservation(2L, salles.get(3), "Ibrahima Fall",
-                LocalDate.of(2026, 9, 16), LocalTime.of(14, 0), LocalTime.of(16, 0)));
-        reservations.add(new Reservation(3L, salles.get(1), "Moussa Ndiaye",
-                LocalDate.of(2026, 9, 17), LocalTime.of(9, 0), LocalTime.of(11, 0)));
-        reservations.get(0).confirmer();
-        reservations.get(2).annuler();
+        List<Reservation> reservations = creerReservations(salles);
 
         System.out.println("\n=== Réservations ===");
         for (Reservation reservation : reservations) {
@@ -47,5 +34,30 @@ public class Application {
         System.out.println("\n=== Association bidirectionnelle ===");
         Salle amphi = salles.get(3);
         System.out.println(amphi.getNom() + " a " + amphi.getNbReservations() + " reservation(s).");
+    }
+
+    /** Crée les salles de démonstration en mémoire. */
+    private static List<Salle> creerSalles() {
+        List<Salle> salles = new ArrayList<>();
+        salles.add(new Salle(1L, "A101", "Bâtiment A", 40, TypeSalle.SALLE_COURS));
+        salles.add(new Salle(2L, "A102", "Bâtiment A", 25, TypeSalle.SALLE_TP));
+        salles.add(new Salle(3L, "B201", "Bâtiment B", 15, TypeSalle.SALLE_REUNION));
+        salles.add(new Salle(4L, "Amphi 1", "Bâtiment C", 200, TypeSalle.AMPHITHEATRE));
+        salles.add(new Salle(5L, "B205", "Bâtiment B", 10, TypeSalle.SALLE_SOUTENANCE));
+        return salles;
+    }
+
+    /** Crée les réservations de démonstration, rattachées aux salles fournies. */
+    private static List<Reservation> creerReservations(List<Salle> salles) {
+        List<Reservation> reservations = new ArrayList<>();
+        reservations.add(new Reservation(1L, salles.get(0), "Awa Diop",
+                LocalDate.of(2026, 9, 15), LocalTime.of(8, 0), LocalTime.of(10, 0)));
+        reservations.add(new Reservation(2L, salles.get(3), "Ibrahima Fall",
+                LocalDate.of(2026, 9, 16), LocalTime.of(14, 0), LocalTime.of(16, 0)));
+        reservations.add(new Reservation(3L, salles.get(1), "Moussa Ndiaye",
+                LocalDate.of(2026, 9, 17), LocalTime.of(9, 0), LocalTime.of(11, 0)));
+        reservations.get(0).confirmer();
+        reservations.get(2).annuler();
+        return reservations;
     }
 }
