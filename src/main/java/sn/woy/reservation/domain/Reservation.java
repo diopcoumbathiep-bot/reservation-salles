@@ -3,11 +3,7 @@ package sn.woy.reservation.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-/**
- * Une réservation concerne une seule salle (référence directe vers
- * Salle - association bidirectionnelle avec Salle.reservations).
- * Déclarée final : aucun sous-type n'est demandé par le domaine.
- */
+
 public final class Reservation extends AbstractEntity {
 
     private String demandeur;
@@ -36,13 +32,11 @@ public final class Reservation extends AbstractEntity {
         this.statut = StatutReservation.ANNULEE;
     }
 
-    // --- Accesseurs ---
 
     public Salle getSalle() {
         return salle;
     }
 
-    /** Maintient la cohérence de l'association bidirectionnelle avec Salle. */
     public void setSalle(Salle salle) {
         this.salle = salle;
         if (salle != null && !salle.getAllReservations().contains(this)) {
