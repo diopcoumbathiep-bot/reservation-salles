@@ -46,3 +46,16 @@ officielle par le formateur. Note : `capacite` n'a volontairement qu'un
 seul point d'entrée en écriture (`changerCapacite()`), pas de `setCapacite()`
 séparé — pour éviter un setter brut qui contournerait la validation
 (cf. section 14.4 du cours sur l'encapsulation).
+
+## Choix de collection pour les données en mémoire (Incrément 3)
+
+`Application.java` utilise une `ArrayList<Salle>` et une
+`ArrayList<Reservation>` pour stocker les objets créés en mémoire.
+Une `ArrayList` a été choisie plutôt qu'une autre collection Java
+parce que :
+- l'ordre d'insertion doit être conservé (les salles/réservations
+  s'affichent dans l'ordre où elles ont été créées) ;
+- l'accès par index (`get(i)`) est utile pour désigner une salle ou
+  une réservation précise dans la démonstration ;
+- aucune contrainte d'unicité ni de tri n'est demandée à ce stade
+  (pas besoin d'un `Set` ou d'une `Map`).
