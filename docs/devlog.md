@@ -93,3 +93,24 @@ https://github.com/diopcoumbathiep-bot/reservation-salles
 * chore: initialiser le projet Maven
 * chore: initialiser le depot Git
 ```
+
+## Démarche de modélisation guidée (section 17 du support de cours)
+
+1. **Deux entités principales :** Salle et Reservation.
+2. **Informations d'identification :** chacune identifiée par son `id`
+   (hérité d'AbstractEntity) ; Salle aussi par nom+batiment, Reservation
+   par la combinaison salle/date/horaire.
+3. **Attributs de Salle :** nom, batiment, capacite, active, type
+   (TypeSalle), plus la liste `reservations` (association).
+4. **Attributs de Reservation :** demandeur, date, heureDebut, heureFin,
+   statut (StatutReservation), plus la référence `salle` (association).
+5. **Relation Salle/Reservation :** association bidirectionnelle —
+   Reservation connaît sa Salle, Salle connaît la liste de ses
+   réservations.
+6. **Cardinalité :** Salle 1 -------- 0..* Reservation.
+7. **Relation « est un » ?** Non — Reservation n'est pas une Salle,
+   donc pas d'`extends` entre les deux, seulement une association.
+8. **Éléments communs pour AbstractEntity :** uniquement l'identifiant
+   (`id`) et `getId()`.
+9. **Classes final :** Salle et Reservation — aucun sous-type demandé
+   par le domaine, `final` évite un héritage sans justification métier.
