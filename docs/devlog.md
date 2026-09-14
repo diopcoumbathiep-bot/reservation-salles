@@ -114,3 +114,12 @@ https://github.com/diopcoumbathiep-bot/reservation-salles
    (`id`) et `getId()`.
 9. **Classes final :** Salle et Reservation — aucun sous-type demandé
    par le domaine, `final` évite un héritage sans justification métier.
+
+   ## Noms importants relevés dans l'énoncé (point 10)
+
+Université, salle, réservation, cours, soutenance, réunion, travaux
+pratiques, événement étudiant, courriel, doublon, application web.
+
+## Verbes relevés
+
+consulter, réserver, gérer, provoquer
